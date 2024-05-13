@@ -12,7 +12,7 @@ from neural_networks.lstm.lstm_model import create_lstm_model
 from neural_networks.lstm.default_blocks import *
 
 # data_path = "/home/workpc/datasets/stocks/stocks_agg"
-data_path = "/home/ubuntu/datasets/"
+data_path = "/home/ubuntu/datasets/stocks_new/train_data/"
 
 
 # tf.keras.backend.set_floatx('float16')
@@ -88,10 +88,10 @@ if __name__ == "__main__":
     # x_val = np.load(f"{data_path}_ffnn/Russia_v2/x_val.npy")
     # y_val = np.load(f"{data_path}_ffnn/Russia_v2/y_range_val.npy")
 
-    x_train = np.load(f"{data_path}x_train.npy")
-    y_train = np.load(f"{data_path}y_range_train.npy")
-    x_val = np.load(f"{data_path}x_val.npy")
-    y_val = np.load(f"{data_path}y_range_val.npy")
+    x_train = np.load(f"{data_path}train_data.npy")
+    y_train = np.load(f"{data_path}train_5d_change.npy")
+    x_val = np.load(f"{data_path}val_data.npy")
+    y_val = np.load(f"{data_path}val_5d_change.npy")
 
     input_size = x_train.shape[1:]
     # output_size = y_train.shape[1]

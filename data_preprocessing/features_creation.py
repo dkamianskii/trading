@@ -104,3 +104,4 @@ if __name__ == "__main__":
         df = pd.read_csv(os.path.join(raw_data_dir, f"{ticker}.csv"), parse_dates=True, index_col="Date")
         feautres_df = form_features(df, insign_val, strong_val)
         feautres_df.to_csv(os.path.join(features_dir, f"{ticker}.csv"))
+

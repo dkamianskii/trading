@@ -10,20 +10,28 @@ from data_scripts.data_config import tickers_list_file, features_dir, test_start
 def create_train_test_data(features_df: pd.DataFrame,
                            test_start_date,
                            days_in_observation: int,
+                           stride: int,
                            target: str):
     data_for_x = features_df.drop([target], axis=1)
     test_start_date_idx = (features_df.index[days_in_observation - 1:] >= test_start_date).argmax()
 
-    x = []
-    for i in range(days_in_observation, features_df.shape[0] + 1):
+    x_train = []
+    x_test = []
+    y_train = []
+    y_test = []
+    for i in range(days_in_observation, features_df.shape[0] + 1, stride):
         x_frame = data_for_x.iloc[i - days_in_observation:i]
-        x.append(x_frame.to_numpy())
+        x_train.append(x_frame.to_numpy())
+        y_train.append(features_df[target][i - 1])
+        if i >= test_start_date_idx:
+            x_test.append(x_frame.to_numpy())
+            y_test.append(features_df[target][i - 1])
 
-    x = np.array(x)
-    y = features_df[target][days_in_observation - 1:]
-    # x_train.append(x[:test_start_date_idx])
-    # y_train.append(y[:test_start_date].to_numpy())
-    return x, y.to_numpy(), x[test_start_date_idx:], y[test_start_date:].to_numpy()
+    x_train = np.array(x_train)
+    x_test = np.array(x_test)
+    y_train = np.array(y_train)
+    y_test = np.array(y_test)
+    return x_train, y_train, x_test, y_test
 
 
 if __name__ == "__main__":
@@ -35,8 +43,9 @@ if __name__ == "__main__":
     target_val = []
 
     for ticker in tqdm(symbols['Symbol']):
+        print(ticker)
         data = pd.read_csv(os.path.join(features_dir, f"{ticker}.csv"), parse_dates=True, index_col="Date")
-        x_train, y_train, x_test, y_test = create_train_test_data(data, test_start_date, 60, target_name)
+        x_train, y_train, x_test, y_test = create_train_test_data(data, test_start_date, 60, 5, target_name)
         data_train.append(x_train)
         data_val.append(x_test)
         target_train.append(y_train)
